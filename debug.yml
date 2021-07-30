@@ -1,0 +1,8 @@
+---
+  - name: Print info
+    become: true
+    hosts: dev, local
+    tasks:
+      - name: print hostvars
+        debug:
+          var: hostvars

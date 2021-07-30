@@ -1,0 +1,15 @@
+---
+  - name: Make file
+    hosts: dev
+    become: true
+    tasks:
+      - name: print info
+        template:
+          src: local_server_list.txt.j2
+          dest: /etc/server_list.txt
+      - name: set file contexts
+        file:
+          path: /etc/server_list.txt
+          owner: ec2-user
+          mode: 0600
+          setype: net_conf_t

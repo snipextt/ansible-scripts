@@ -1,0 +1,9 @@
+---
+  - name: Set default target
+    hosts: dev
+    become: true
+    tasks:
+      - name: Set defaukt target to multi-user
+        shell:
+          cmd: systemctl set-default multi-user.target
+...

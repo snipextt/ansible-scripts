@@ -1,0 +1,32 @@
+---
+  - name: User and groups
+    hosts: local
+    become: true
+    vars_files:
+      - secret.yml
+      - user_list.yml
+    tasks:
+      - name: Create users and ssh profile
+        block:
+          - name: Create users
+            user:
+              name: "{{ item.username  }}"
+              group: wheel
+              shell: /bin/bash
+              password: "{{ user_password | password_hash('sha512', 'secret') }}"
+            when: item.uid is match("1")
+            loop: "{{ Users }}"
+          - name: Add ssh key
+            authorized_key:
+              user: "{{ item.username }}"
+              state: present
+              key: "{{ lookup('file', '/home/snipextt/.ssh/id_rsa.pub') }}"
+            when: item.uid is match("1")
+            loop: "{{ Users }}"
+      - name: Add wheel group sudo
+        lineinfile:
+          dest: /etc/sudoers
+          regexp: "^%wheel"
+          line: "%wheel ALL=(ALL) NOPASSWD: ALL"
+          validate: "visudo -cf %s"
+...

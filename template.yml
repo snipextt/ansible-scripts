@@ -1,0 +1,10 @@
+---
+  - name: Template file to hosts
+    hosts: dev, local
+    become: true
+    tasks:
+      - name: template
+        template:
+          src: hosts.j2
+          dest: /etc/myhosts
+        when: inventory_hostname in groups['dev']

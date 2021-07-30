@@ -1,0 +1,56 @@
+---
+# Create a playbook called webdev.yml in 'home/sandy/ansible. The playbook will create a directory Avcbdev on dev host. The permission of the directory are 2755 and owner is webdev. Create a symbolic link from /Webdev to /var/www/html/webdev. Serve a file from Avebde# v7index.html which displays the text "Development" Curl http://node1.example.com/webdev/index.html to test
+- name: Create directory and symlinks
+  hosts: dev
+  become: true
+  tasks:
+    - name: create web dev user
+      user:
+        name: webdev
+        state: present
+    - name: create a directory
+      file:
+        path: /webdev
+        state: directory
+        owner: webdev
+        mode: "2755"
+    - name: install httpd
+      yum:
+        name: httpd
+        state: latest
+    - name: create a symlink
+      file:
+        src: /webdev
+        state: link
+        path: /var/www/html/webdev
+    - name: Copy index.html file
+      copy:
+        src: index.html
+        dest: /webdev/index.html
+    - name: install selinux policies
+      yum:
+        name:
+          - policycoreutils-python-utils
+          - python3-policycoreutils
+        state: latest
+    # setcontext using a role for praactise
+    - name: Add selinux policy for this directory
+      sefcontext:
+        target: "/webdev(/.*)?"
+        setype: httpd_sys_content_t
+        state: present
+    - name: restore the context
+      shell: restorecon -vR /webdev
+    - name: start httpd
+      service:
+        name: httpd
+        state: started
+        enabled: true
+- name: Ping dev host
+  hosts: localhost
+  tasks:
+    - name: hit the host
+      uri:
+        url: http://44.195.77.29/webdev/
+---
+

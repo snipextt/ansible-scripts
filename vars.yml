@@ -1,0 +1,8 @@
+---
+  - name: Print vars
+    hosts: dev
+    tasks:
+      - name: Printing here
+        debug:
+          var: ansible_fqdn
+

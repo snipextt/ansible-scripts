@@ -1,0 +1,14 @@
+---
+  - name: Add yum repo
+    become: true
+    hosts: dev
+    tasks:
+      - name: Add repo
+        yum_repository:
+          name: mysql80-community
+          description: "MYSQL 8.0  Yum repo"
+          baseurl: "http://repo.mysql.com/yum/mysql-8.0-community/el/8/x86_64/"
+          gpgkey: "http://repo.mysql.com/RPM-GPG-KEY-mysql"
+          gpgcheck: true
+          enabled: true
+...

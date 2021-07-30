@@ -1,0 +1,25 @@
+---
+# tasks file for sample-spache
+ - name: Install httpd
+   yum:
+    name:
+      - httpd
+      - mod_ssl
+      - php
+    state: latest
+ - name: copy index.html file
+   template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+   register: rc
+ - name: restart http when changed
+   service:
+    name: httpd
+    state: restarted
+   when: rc.changed
+ - name: enabled httpd
+   service:
+    name: httpd
+    state: started
+    enabled: true
+

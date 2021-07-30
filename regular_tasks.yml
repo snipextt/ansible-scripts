@@ -1,0 +1,11 @@
+---
+  - name: Create cron jobs
+    become: true
+    hosts: local
+    tasks:
+      - name: create cron jobs
+        cron:
+          special_time: hourly
+          name: log date
+          job: "date 1>> /var/log/time.log"
+...

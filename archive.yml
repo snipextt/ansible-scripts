@@ -1,0 +1,15 @@
+--- 
+  - name: Make archive
+    hosts: dev
+    become: true
+    tasks:
+      - name: Create the file with content specified
+        copy:
+          content: dev,test,qa,prod
+          dest: /home/ec2-user/database_list.txt
+      - name: Archive the file
+        archive:
+          path: /home/ec2-user/database_list.txt
+          dest: /home/ec2-user/archive.gz
+          format: gz
+...

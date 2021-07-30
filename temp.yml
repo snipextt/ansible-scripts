@@ -1,0 +1,6 @@
+---
+  - name: Create and debug
+    hosts: dev
+    become: true
+    roles:
+      - sample-apache
